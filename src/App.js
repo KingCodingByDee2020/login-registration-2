@@ -1,7 +1,7 @@
 import { Box, ChakraProvider, Grid, theme } from '@chakra-ui/react';
-import React from 'react';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import './index.css';
+import { Form } from 'components';
 
 function App() {
   return (
@@ -9,6 +9,7 @@ function App() {
       <Box textAlign="center" fontSize="xl">
         <Grid minH="100vh" p={3}>
           <ColorModeSwitcher justifySelf="flex-end" />
+          <Form />
         </Grid>
       </Box>
     </ChakraProvider>

@@ -1,17 +1,20 @@
-import { Box, ChakraProvider, Grid, theme } from '@chakra-ui/react';
+import { ChakraProvider, Container, Grid, theme } from '@chakra-ui/react';
+import { Form } from 'components';
+import { BaseCard } from 'components/base';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 import './index.css';
-import { Form } from 'components';
 
 function App() {
   return (
     <ChakraProvider theme={theme}>
-      <Box textAlign="center" fontSize="xl">
-        <Grid minH="100vh" p={3}>
-          <ColorModeSwitcher justifySelf="flex-end" />
-          <Form />
-        </Grid>
-      </Box>
+      <Grid minH="100vh" p={3}>
+        <ColorModeSwitcher justifySelf="flex-end" />
+        <Container>
+          <BaseCard>
+            <Form />
+          </BaseCard>
+        </Container>
+      </Grid>
     </ChakraProvider>
   );
 }

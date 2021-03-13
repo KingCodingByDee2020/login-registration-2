@@ -7,6 +7,7 @@ import {
   FormLabel,
   Input,
 } from '@chakra-ui/react';
+import api from 'api';
 import { useState } from 'react';
 
 function LoginRegistrationForm() {
@@ -16,14 +17,23 @@ function LoginRegistrationForm() {
     setForgot(prev => !prev);
   };
 
-  const handleSubmit = event => {
+  const handleSubmit = async function (event) {
     event.preventDefault();
 
-    /**
-     * TODOs: 1. Identify which button was clicked from its `innerText` so we know which api method to trigger.
-     */
+    const email = event.target.elements[0].value;
+    const password = event.target.elements[1].value;
 
-    console.log(event, 'xxx');
+    switch (event.nativeEvent.submitter.innerText) {
+      case 'Reset Password':
+        const msg = await api.update(email);
+        setInfo(() => msg);
+        break;
+      case 'Login':
+        api.show(email, password);
+        break;
+      default:
+        api.create(email, password);
+    }
   };
 
   return (
@@ -55,6 +65,8 @@ function LoginRegistrationForm() {
           {forgot ? 'Login/Register' : 'Forgot Password?'}
         </Button>
       </ButtonGroup>
+
+      {info ? <p className="text-red-300">{info}</p> : null}
     </form>
   );
 }

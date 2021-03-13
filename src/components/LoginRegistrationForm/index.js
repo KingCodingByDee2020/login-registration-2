@@ -12,6 +12,7 @@ import { useState } from 'react';
 
 function LoginRegistrationForm() {
   const [forgot, setForgot] = useState(false);
+  const [info, setInfo] = useState();
 
   const handleClick = () => {
     setForgot(prev => !prev);
@@ -25,8 +26,12 @@ function LoginRegistrationForm() {
 
     switch (event.nativeEvent.submitter.innerText) {
       case 'Reset Password':
-        const msg = await api.update(email);
-        setInfo(() => msg);
+        try {
+          const msg = await api.update(email);
+          setInfo(() => msg);
+        } catch (error) {
+          setInfo(() => error.message);
+        }
         break;
       case 'Login':
         api.show(email, password);

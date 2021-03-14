@@ -8,36 +8,59 @@ import {
   Input,
 } from '@chakra-ui/react';
 import api from 'api';
-import { useState } from 'react';
+import { useReducer } from 'react';
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'toggleForgot':
+      const { forgot: prev } = state;
+      return { ...state, ...{ forgot: !prev, info: '' } };
+    case 'updateInfo':
+      return { ...state, ...{ info: action.payload } };
+    default:
+      throw new Error('Illegal 🙅🏾‍♂️ action!');
+  }
+}
 
 function LoginRegistrationForm() {
-  const [forgot, setForgot] = useState(false);
-  const [info, setInfo] = useState();
+  const [formState, dispatch] = useReducer(reducer, { forgot: false });
 
   const handleClick = () => {
-    setForgot(prev => !prev);
+    dispatch({ type: 'toggleForgot' });
   };
 
   const handleSubmit = async function (event) {
     event.preventDefault();
-
     const email = event.target.elements[0].value;
     const password = event.target.elements[1].value;
 
     switch (event.nativeEvent.submitter.innerText) {
+      case 'Login':
+        try {
+          const user = await api.show(email, password);
+          console.log(user);
+        } catch (error) {
+          dispatch({ type: 'updateInfo', payload: error.message });
+        }
+        break;
+      case 'Register':
+        try {
+          const user = await api.create(email, password);
+          console.log(user);
+        } catch (error) {
+          dispatch({ type: 'updateInfo', payload: error.message });
+        }
+        break;
       case 'Reset Password':
         try {
           const msg = await api.update(email);
-          setInfo(() => msg);
+          dispatch({ type: 'updateInfo', payload: msg });
         } catch (error) {
-          setInfo(() => error.message);
+          dispatch({ type: 'updateInfo', payload: error.message });
         }
         break;
-      case 'Login':
-        api.show(email, password);
-        break;
       default:
-        api.create(email, password);
+        throw new Error('Illegal 🙅🏾‍♂️ action!');
     }
   };
 
@@ -45,33 +68,33 @@ function LoginRegistrationForm() {
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <FormControl id="email">
         <FormLabel>Email address</FormLabel>
-        <Input type="email" />
+        <Input type="email" required />
       </FormControl>
 
-      <Collapse in={!forgot} animateOpacity>
+      <Collapse in={!formState.forgot} animateOpacity>
         <FormControl id="password">
           <FormLabel>Password</FormLabel>
-          <Input type="password" />
+          <Input type="password" required minLength="6" />
         </FormControl>
       </Collapse>
 
       <ButtonGroup variant="outline" spacing="6">
         <Button type="submit" colorScheme="green">
-          {forgot ? 'Reset Password' : 'Login'}
+          {formState.forgot ? 'Reset Password' : 'Login'}
         </Button>
 
-        <Fade in={!forgot} animateOpacity>
+        <Fade in={!formState.forgot} animateOpacity>
           <Button type="submit" colorScheme="blue">
             Register
           </Button>
         </Fade>
 
         <Button type="button" colorScheme="orange" onClick={handleClick}>
-          {forgot ? 'Login/Register' : 'Forgot Password?'}
+          {formState.forgot ? 'Login/Register' : 'Forgot Password?'}
         </Button>
       </ButtonGroup>
 
-      {info ? <p className="text-red-300">{info}</p> : null}
+      {formState.info ? <p className="text-red-300">{formState.info}</p> : null}
     </form>
   );
 }

@@ -105,14 +105,14 @@ function LoginRegistrationForm() {
       <Collapse in={!(mode === 'forgotten')} animateOpacity>
         <FormControl id="password">
           <FormLabel>Password</FormLabel>
-          <Input type="password" required minLength="6" />
+          <Input type="password" />
         </FormControl>
       </Collapse>
 
       <Collapse in={mode === 'registration'} animateOpacity>
         <FormControl id="name">
           <FormLabel>Full Name</FormLabel>
-          <Input type="text" required />
+          <Input type="text" />
         </FormControl>
 
         <FormControl id="profile">

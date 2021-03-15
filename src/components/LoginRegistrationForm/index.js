@@ -10,6 +10,7 @@ import {
 import { useState } from 'react';
 
 function LoginRegistrationForm() {
+  // `forgot` is the state - initialized false
   const [forgot, setForgot] = useState(false);
 
   const handleClick = () => {

@@ -2,7 +2,6 @@ import { ChakraProvider, Container, Grid, theme } from '@chakra-ui/react';
 import { Form } from 'components';
 import { BaseCard } from 'components/base';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
-import './index.css';
 
 function App() {
   return (

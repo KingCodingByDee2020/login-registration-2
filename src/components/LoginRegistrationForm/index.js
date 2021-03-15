@@ -37,9 +37,10 @@ function renderSubmitTxt(mode) {
 
 function LoginRegistrationForm() {
   const [mode, setMode] = useState('login');
-  const [info, setInfo] = useState('');
+  const [info, setInfo] = useState(null);
 
   const handleClick = ({ target: { innerText } }) => {
+    setInfo(() => null);
     if (
       innerText === 'Already Have an Account?' ||
       innerText === 'Login/Register'

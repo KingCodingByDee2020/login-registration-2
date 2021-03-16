@@ -1,16 +1,31 @@
 import auth from './auth';
 
 const api = {
-  show(email, password) {
-    console.log(auth);
+  async show(email, password) {
+    try {
+      const user = await auth.signInWithEmailAndPassword(email, password);
+      return user;
+    } catch (error) {
+      throw new Error(error);
+    }
   },
 
-  create(email, password) {
-    console.log(auth);
+  async create(email, password) {
+    try {
+      const user = await auth.createUserWithEmailAndPassword(email, password);
+      return user;
+    } catch (error) {
+      throw new Error(error);
+    }
   },
 
   update(email) {
-    console.log(auth);
+    return auth
+      .sendPasswordResetEmail(email)
+      .then(() => 'Go check your ✉️❗')
+      .catch(error => {
+        throw new Error(error);
+      });
   },
 };
 

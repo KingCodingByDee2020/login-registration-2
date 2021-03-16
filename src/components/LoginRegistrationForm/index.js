@@ -31,7 +31,9 @@ function LoginRegistrationForm() {
 
   const finishRegistration = async (fname, photo) => {
     try {
-      const photoURL = await getPhotoURL(photo);
+      const photoURL = photo
+        ? await getPhotoURL(photo)
+        : 'https://i.stack.imgur.com/34AD2.jpg';
 
       const currentUser = await api.auth.show();
 
@@ -91,6 +93,7 @@ function LoginRegistrationForm() {
             submission.email,
             submission.password
           );
+          // If successful...THEN...route to the admin page
           console.log(user);
         } catch (error) {
           dispatch({ type: 'update-info', payload: error.message });

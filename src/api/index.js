@@ -5,8 +5,13 @@ const api = {
   auth: {
     async show(email, password) {
       try {
-        const user = await auth.signInWithEmailAndPassword(email, password);
-        return user;
+        if (email && password) {
+          const user = await auth.signInWithEmailAndPassword(email, password);
+          return user;
+        }
+
+        // If no email and password, just check for a current user
+        return auth.currentUser;
       } catch (error) {
         throw new Error(error);
       }

@@ -60,7 +60,7 @@ function LoginRegistrationForm() {
     switch (formState.mode) {
       case 'login':
         try {
-          const user = await api.show(email, password);
+          const user = await api.auth.show(email, password);
           console.log(user);
         } catch (error) {
           dispatch({ type: 'update-info', payload: error.message });
@@ -68,7 +68,7 @@ function LoginRegistrationForm() {
         break;
       case 'registration':
         try {
-          const user = await api.create(email, password);
+          const user = await api.auth.create(email, password);
           console.log(user);
         } catch (error) {
           dispatch({ type: 'update-info', payload: error.message });
@@ -76,7 +76,7 @@ function LoginRegistrationForm() {
         break;
       case 'forgotten':
         try {
-          const msg = await api.update(email);
+          const msg = await api.auth.update(email);
           dispatch({ type: 'update-info', payload: msg });
         } catch (error) {
           dispatch({ type: 'update-info', payload: error.message });

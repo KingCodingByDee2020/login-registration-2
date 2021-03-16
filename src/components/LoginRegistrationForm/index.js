@@ -53,14 +53,17 @@ function LoginRegistrationForm() {
 
   const handleSubmit = async function (event) {
     event.preventDefault();
-    // TODO: Actually handle all of the fields
-    const email = event.target.elements[0].value;
-    const password = event.target.elements[1].value;
+
+    const submission = Object.fromEntries(new FormData(event.target));
+    console.log(submission);
 
     switch (formState.mode) {
       case 'login':
         try {
-          const user = await api.auth.show(email, password);
+          const user = await api.auth.show(
+            submission.email,
+            submission.password
+          );
           console.log(user);
         } catch (error) {
           dispatch({ type: 'update-info', payload: error.message });
@@ -68,7 +71,10 @@ function LoginRegistrationForm() {
         break;
       case 'registration':
         try {
-          const user = await api.auth.create(email, password);
+          const user = await api.auth.create(
+            submission.email,
+            submission.password
+          );
           console.log(user);
         } catch (error) {
           dispatch({ type: 'update-info', payload: error.message });
@@ -76,7 +82,7 @@ function LoginRegistrationForm() {
         break;
       case 'forgotten':
         try {
-          const msg = await api.auth.update(email);
+          const msg = await api.auth.update(submission.email);
           dispatch({ type: 'update-info', payload: msg });
         } catch (error) {
           dispatch({ type: 'update-info', payload: error.message });
@@ -94,7 +100,7 @@ function LoginRegistrationForm() {
       case 'registration':
         return 'Register';
       case 'forgotten':
-        return 'Reset Password';
+        return 'Reset submission.Password';
       default:
         throw new Error('Illegal form mode');
     }
@@ -104,13 +110,13 @@ function LoginRegistrationForm() {
     <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
       <FormControl id="email" isRequired>
         <FormLabel>Email address</FormLabel>
-        <Input type="email" />
+        <Input type="email" name="email" />
       </FormControl>
 
       <Collapse in={!(formState.mode === 'forgotten')} animateOpacity>
         <FormControl id="password" isRequired>
           <FormLabel>Password</FormLabel>
-          <Input type="password" />
+          <Input type="password" name="password" />
         </FormControl>
       </Collapse>
 
@@ -121,7 +127,7 @@ function LoginRegistrationForm() {
       >
         <FormControl id="name" isRequired>
           <FormLabel>Full Name</FormLabel>
-          <Input type="text" />
+          <Input type="text" name="fullName" />
         </FormControl>
 
         <FormControl id="profile" className="mt-4">
@@ -130,6 +136,7 @@ function LoginRegistrationForm() {
             type="file"
             accept="image/*"
             className="no-border no-left-padding"
+            name="file"
           />
         </FormControl>
       </Collapse>

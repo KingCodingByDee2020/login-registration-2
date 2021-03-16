@@ -29,6 +29,24 @@ function reducer(state, { type, payload }) {
 function LoginRegistrationForm() {
   const [formState, dispatch] = useReducer(reducer, { mode: 'login' });
 
+  const finishRegistration = async (fname, photo) => {
+    const photoURL = await getPhotoURL(photo);
+    console.log(photoURL);
+
+    // TODO: Get the current user from `auth`
+    // TODO: `updateProfile`...then...
+    // TODO: route to admin page! 🎊
+  };
+
+  async function getPhotoURL(img) {
+    if (img) {
+      // `secure_url` comes back in the JSON that Cloudinary sends back
+      // We are destructuring and renaming to `url`
+      const { secure_url: url } = await api.photo.create(img);
+      return url;
+    }
+  }
+
   const handleClick = ({ target: { innerText } }) => {
     if (
       innerText === 'Already Have an Account?' ||
@@ -55,7 +73,6 @@ function LoginRegistrationForm() {
     event.preventDefault();
 
     const submission = Object.fromEntries(new FormData(event.target));
-    console.log(submission);
 
     switch (formState.mode) {
       case 'login':
@@ -70,15 +87,14 @@ function LoginRegistrationForm() {
         }
         break;
       case 'registration':
-        try {
-          const user = await api.auth.create(
-            submission.email,
-            submission.password
-          );
-          console.log(user);
-        } catch (error) {
-          dispatch({ type: 'update-info', payload: error.message });
-        }
+        api.auth
+          .create(submission.email, submission.password)
+          .then(() => {
+            finishRegistration(submission.fullName, submission.profile);
+          })
+          .catch(error => {
+            dispatch({ type: 'update-info', payload: error.message });
+          });
         break;
       case 'forgotten':
         try {
@@ -136,7 +152,7 @@ function LoginRegistrationForm() {
             type="file"
             accept="image/*"
             className="no-border no-left-padding"
-            name="file"
+            name="profile"
           />
         </FormControl>
       </Collapse>

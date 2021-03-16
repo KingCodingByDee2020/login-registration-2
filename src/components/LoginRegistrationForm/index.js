@@ -33,7 +33,7 @@ function LoginRegistrationForm() {
     const photoURL = await getPhotoURL(photo);
     console.log(photoURL);
 
-    // TODO: Get the current user from `auth`
+    const currentUser = await api.auth.show();
     // TODO: `updateProfile`...then...
     // TODO: route to admin page! 🎊
   };

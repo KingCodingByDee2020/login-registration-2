@@ -30,12 +30,22 @@ function LoginRegistrationForm() {
   const [formState, dispatch] = useReducer(reducer, { mode: 'login' });
 
   const finishRegistration = async (fname, photo) => {
-    const photoURL = await getPhotoURL(photo);
-    console.log(photoURL);
+    try {
+      const photoURL = await getPhotoURL(photo);
 
-    const currentUser = await api.auth.show();
-    // TODO: `updateProfile`...then...
-    // TODO: route to admin page! 🎊
+      const currentUser = await api.auth.show();
+
+      currentUser
+        .updateProfile({ displayName: fname, photoURL })
+        .then(results => {
+          console.log(results, currentUser);
+        })
+        .catch(error => {
+          throw new Error(error.message);
+        });
+    } catch (error) {
+      dispatch({ type: 'update-info', payload: error.message });
+    }
   };
 
   async function getPhotoURL(img) {

@@ -1,6 +1,6 @@
 import { ChakraProvider, Container, Grid, theme } from '@chakra-ui/react';
-import { Form } from 'components';
-import { BaseCard } from 'components/base';
+import { LoginPage } from 'pages';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { ColorModeSwitcher } from './ColorModeSwitcher';
 
 function App() {
@@ -9,9 +9,13 @@ function App() {
       <Grid minH="100vh" p={3}>
         <ColorModeSwitcher justifySelf="flex-end" />
         <Container>
-          <BaseCard>
-            <Form />
-          </BaseCard>
+          <Router>
+            <Switch>
+              <Route path="/">
+                <LoginPage />
+              </Route>
+            </Switch>
+          </Router>
         </Container>
       </Grid>
     </ChakraProvider>
